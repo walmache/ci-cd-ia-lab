@@ -39,7 +39,7 @@ def predict():
         if np_data.ndim == 1:
             np_data = np_data.reshape(1, -1)
 
-        prediction = np.argmax(model.predict([data]), axis=1)
+        prediction = np.argmax(model.predict(np_data), axis=1)
         print(f"Predicción generada: {prediction}")
 
         return jsonify({'prediction': int(prediction[0])})
