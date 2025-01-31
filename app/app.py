@@ -13,7 +13,6 @@ def load_model():
         return pickle.load(f)
 
 @app.route('/predict', methods=['POST'])
-
 def predict():
     # data = request.json['data']
     # prediction = np.argmax(model.predict([data]), axis=1)
@@ -29,6 +28,16 @@ def predict():
 
         data = request.json['data']
         print(f"Datos recibidos: {data}")
+        
+        if data is None:
+            return jsonify({'error': 'Sin datos'}), 400
+
+        # Convertir a numpy array
+        np_data = np.array(data, dtype=np.float32)
+
+        # Asegurar que la forma del array es correcta
+        if np_data.ndim == 1:
+            np_data = np_data.reshape(1, -1)
 
         prediction = np.argmax(model.predict([data]), axis=1)
         print(f"Predicción generada: {prediction}")
