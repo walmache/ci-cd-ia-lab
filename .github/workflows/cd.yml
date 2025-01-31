@@ -21,14 +21,27 @@ jobs:
       - name: Configurar Docker para GCP
         run: gcloud auth configure-docker
 
-      - name: Construir y subir imagen Docker
+    #   - name: Construir y subir imagen Docker
+    #     run: |
+    #       docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/ci-cd-ia:latest .
+    #       docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ci-cd-ia:latest
+
+    #   - name: Desplegar en Cloud Run
+    #     run: |
+    #       gcloud run deploy ci-cd-ia \
+    #         --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/ci-cd-ia:latest \
+    #         --platform managed --region us-central1\
+    #         --allow-unauthenticated
+
+      - name: Construir y subir imagen Docker a Artifact Registry
         run: |
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/ci-cd-ia:latest .
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/ci-cd-ia:latest
+            docker build -t us-central1-docker.pkg.dev/cicdlab-449501/ci-cd-ia/ci-cd-ia:latest .
+            docker push us-central1-docker.pkg.dev/cicdlab-449501/ci-cd-ia/ci-cd-ia:latest
 
       - name: Desplegar en Cloud Run
         run: |
           gcloud run deploy ci-cd-ia \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/ci-cd-ia:latest \
-            --platform managed --region us-central1\
+            --image us-central1-docker.pkg.dev/cicdlab-449501/ci-cd-ia/ci-cd-ia:latest \
+            --platform managed \
+            --region us-central1 \
             --allow-unauthenticated
