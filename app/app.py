@@ -18,10 +18,25 @@ def predict():
     # data = request.json['data']
     # prediction = np.argmax(model.predict([data]), axis=1)
     # return jsonify({'prediction': int(prediction[0])})
-    model = load_model()  # Se carga solo cuando se necesita
-    data = request.json['data']
-    prediction = np.argmax(model.predict([data]), axis=1)
-    return jsonify({'prediction': int(prediction[0])})
+    #model = load_model()  # Se carga solo cuando se necesita
+    #data = request.json['data']
+    #prediction = np.argmax(model.predict([data]), axis=1)
+    #return jsonify({'prediction': int(prediction[0])})
+    try:
+        print("Cargando modelo...")
+        model = load_model()
+        print("Modelo cargado correctamente.")
+
+        data = request.json['data']
+        print(f"Datos recibidos: {data}")
+
+        prediction = np.argmax(model.predict([data]), axis=1)
+        print(f"Predicción generada: {prediction}")
+
+        return jsonify({'prediction': int(prediction[0])})
+    except Exception as e:
+        print(f"Error en la predicción: {e}")
+        return jsonify({'error': str(e)}), 500
     
 
 if __name__ == '__main__':
